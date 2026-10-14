@@ -3,11 +3,13 @@
 REMAINING_TODAY_UNIT = 1
 TOMORROW_UNIT = 2
 STATUS_UNIT = 3
+NEXT_HOUR_UNIT = 4
 
 DEVICE_DEFINITIONS = (
     (REMAINING_TODAY_UNIT, "Remaining Today", "Custom", {"Custom": "1;kWh"}),
     (TOMORROW_UNIT, "Tomorrow Forecast", "Custom", {"Custom": "1;kWh"}),
     (STATUS_UNIT, "Status", "Text", {}),
+    (NEXT_HOUR_UNIT, "Next Hour Forecast", "Custom", {"Custom": "1;kWh"}),
 )
 
 

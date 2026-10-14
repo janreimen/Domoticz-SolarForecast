@@ -2,16 +2,17 @@
 
 - **Maintainer / project owner:** Jan Reimen ([`@janreimen`](https://github.com/janreimen))
 - **Canonical repository:** https://github.com/janreimen/Domoticz-SolarForecast
-- **Current version:** `0.0.2`
+- **Current version:** `0.0.3`
 
 A modular [Domoticz](https://www.domoticz.com/) Python plugin that retrieves photovoltaic (PV) production forecasts from [forecast.solar](https://forecast.solar/) and exposes useful energy estimates as Domoticz devices.
 
-> **Release:** `0.0.2` — maintenance release with safe Domoticz device updates and project ownership metadata. This is forecast data, not a meter reading or a guarantee of production.
+> **Release:** `0.0.3` — adds a forecast for the next complete clock hour. This is forecast data, not a meter reading or a guarantee of production.
 
 ## Features
 
 - Forecast energy remaining today, strictly capped at local midnight.
 - A separate full-day forecast for tomorrow.
+- Forecast energy for the next complete clock-hour block (e.g. at 17:44, the 18:00–19:00 hour).
 - Current forecast interval is prorated when the current time falls within it.
 - Independent status device to help identify unavailable/stale forecast data.
 - `.env`-based configuration; process environment variables take precedence.
@@ -25,8 +26,9 @@ A modular [Domoticz](https://www.domoticz.com/) Python plugin that retrieves pho
 | 1 | Remaining Today | Estimated PV energy from now until midnight | Forecast energy, kWh |
 | 2 | Tomorrow Forecast | Estimated PV energy for tomorrow's calendar day | Forecast energy, kWh |
 | 3 | Status | Most recent update/result status | Text |
+| 4 | Next Hour Forecast | Estimated PV energy for the next full clock hour | Forecast energy, kWh |
 
-The two numeric devices represent forecast energy, not actual generated energy, instantaneous power, irradiance, or money. Do not connect them to a cumulative energy counter as if they were meter readings. Check the Status device before using forecast values in automations. If a forecast is unavailable, do not assume a numeric zero means a genuine zero-production forecast.
+The numeric devices represent forecast energy, not actual generated energy, instantaneous power, irradiance, or money. Do not connect them to a cumulative energy counter as if they were meter readings. Check the Status device before using forecast values in automations. If a forecast is unavailable, do not assume a numeric zero means a genuine zero-production forecast.
 
 ## Requirements
 
@@ -88,7 +90,7 @@ See [Configuration](docs/CONFIGURATION.md) for validation, precedence, and examp
 
 ## Midnight boundary and time handling
 
-The remaining-today calculation uses the host's local time and never includes forecast intervals belonging to tomorrow. The current interval is prorated where possible. Tomorrow's estimate is taken from the API's daily forecast for tomorrow, not by adding today's remaining energy. Forecast availability and granularity depend on the upstream service and account plan.
+The remaining-today calculation uses the host's local time and never includes forecast intervals belonging to tomorrow. The current interval is prorated where possible. The Next Hour Forecast is the next complete clock-hour block, not a rolling 60-minute window: at 17:44 it covers 18:00–19:00. Tomorrow's estimate is taken from the API's daily forecast for tomorrow, not by adding today's remaining energy. Forecast availability and granularity depend on the upstream service and account plan.
 
 ## Community and support
 
@@ -105,4 +107,4 @@ This project builds on the Domoticz SolarForecast plugin by [Jan-Jaap Kostelijk]
 
 ## Release and compatibility notes
 
-This release is `0.0.2`. Treat it as an early release: test it on a non-production Domoticz instance before relying on it for automations. Offline tests do not replace integration testing against your exact Domoticz version and a live API response. See [Release Process](docs/RELEASING.md).
+This release is `0.0.3`. Treat it as an early release: test it on a non-production Domoticz instance before relying on it for automations. Offline tests do not replace integration testing against your exact Domoticz version and a live API response. See [Release Process](docs/RELEASING.md).

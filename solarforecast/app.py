@@ -6,7 +6,7 @@ from . import __version__
 from .api import fetch_forecast
 from .config import load_env_file, parse_config
 from .devices import (
-    REMAINING_TODAY_UNIT, TOMORROW_UNIT, STATUS_UNIT,
+    REMAINING_TODAY_UNIT, TOMORROW_UNIT, STATUS_UNIT, NEXT_HOUR_UNIT,
     ensure_devices, update_unit,
 )
 from .forecast import parse_forecast
@@ -79,18 +79,23 @@ class SolarForecastApp:
             today_kwh = forecast["remaining_today_wh"] / 1000.0
             tomorrow_wh = forecast["tomorrow_wh"]
             tomorrow_kwh = tomorrow_wh / 1000.0 if tomorrow_wh is not None else 0.0
+            next_hour_kwh = forecast["next_hour_wh"] / 1000.0
             devices = self.devices_provider()
             update_unit(self.domoticz, devices, REMAINING_TODAY_UNIT,
                         "{:.3f}".format(today_kwh), self.log)
             update_unit(self.domoticz, devices, TOMORROW_UNIT,
                         "{:.3f}".format(tomorrow_kwh), self.log)
+            update_unit(self.domoticz, devices, NEXT_HOUR_UNIT,
+                        "{:.3f}".format(next_hour_kwh), self.log)
             if tomorrow_wh is None:
-                status = "PARTIAL - today {:.3f} kWh; tomorrow forecast unavailable".format(today_kwh)
+                status = "PARTIAL - today {:.3f}; next hour {:.3f} kWh; tomorrow unavailable".format(
+                    today_kwh, next_hour_kwh)
                 self.log("WARNING", "No daily forecast returned for tomorrow ({})".format(forecast["tomorrow"]))
             else:
-                status = "OK - today remaining {:.3f} kWh; tomorrow {:.3f} kWh".format(today_kwh, tomorrow_kwh)
-                self.log("INFO", "Updated forecast: remaining today {:.3f} kWh; tomorrow {:.3f} kWh".format(
-                    today_kwh, tomorrow_kwh))
+                status = "OK - today {:.3f}; next hour {:.3f}; tomorrow {:.3f} kWh".format(
+                    today_kwh, next_hour_kwh, tomorrow_kwh)
+                self.log("INFO", "Updated forecast: today remaining {:.3f} kWh; next full hour {:.3f} kWh; tomorrow {:.3f} kWh".format(
+                    today_kwh, next_hour_kwh, tomorrow_kwh))
             update_unit(self.domoticz, devices, STATUS_UNIT, status, self.log)
             self.last_success = self.clock()
         except Exception as exc:

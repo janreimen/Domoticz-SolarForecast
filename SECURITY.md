@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-The current release line is `0.0.2`. Security fixes, if any, will be prioritized for the latest maintained version. This early-stage project does not promise a formal long-term support window.
+The current release line is `0.0.3`. Security fixes, if any, will be prioritized for the latest maintained version. This early-stage project does not promise a formal long-term support window.
 
 ## Reporting a vulnerability
 

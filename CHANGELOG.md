@@ -2,6 +2,18 @@
 
 All notable user-facing changes for this project are documented here. This project uses a simple Keep a Changelog-inspired structure.
 
+## [0.0.3] - 2026-10-14
+
+### Added
+
+- Added the `Next Hour Forecast` kWh sensor (Domoticz unit 4).
+- The sensor estimates energy for the next complete clock-hour block, not a rolling 60-minute window. For example, at 17:44 it forecasts 18:00–19:00.
+- Added fixed-time unit tests for next-hour boundary behavior.
+
+### Changed
+
+- Updated plugin metadata, package version, API User-Agent, and current-release documentation to `0.0.3`.
+
 ## [0.0.2] - 2026-10-14
 
 ### Fixed

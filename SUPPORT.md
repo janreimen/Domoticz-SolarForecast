@@ -5,7 +5,7 @@ This is a community-maintained Domoticz plugin, provided on a best-effort basis.
 ## Before asking for help
 
 1. Read the [README](README.md), [FAQ](docs/FAQ.md), and [Troubleshooting](docs/TROUBLESHOOTING.md).
-2. Confirm the plugin version (`0.0.2`), Domoticz version, and Python version.
+2. Confirm the plugin version (`0.0.3`), Domoticz version, and Python version.
 3. Run the offline test suite and compilation checks.
 4. Check the Domoticz log around plugin startup and a forecast refresh.
 5. Remove API keys, VINs, public IPs, account identifiers, precise home coordinates, and other private details from logs before posting.

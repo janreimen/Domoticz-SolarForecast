@@ -31,6 +31,11 @@ def parse_forecast(payload, now=None):
     today = now.date()
     tomorrow = today + timedelta(days=1)
     midnight = datetime.combine(tomorrow, datetime_time.min)
+    # "Next hour" means the next complete clock-hour block, not a rolling
+    # 60-minute window. At 17:44, for example, this is 18:00-19:00.
+    current_hour_start = now.replace(minute=0, second=0, microsecond=0)
+    next_hour_start = current_hour_start if now == current_hour_start else current_hour_start + timedelta(hours=1)
+    next_hour_end = next_hour_start + timedelta(hours=1)
 
     periods = []
     for timestamp, value in periods_raw.items():
@@ -42,6 +47,21 @@ def parse_forecast(payload, now=None):
     periods.sort(key=lambda item: item[0])
     if not periods:
         raise ValueError("API response contains no valid watt_hours_period entries")
+
+    next_hour_energy = 0.0
+    for index, (start, energy_wh) in enumerate(periods):
+        # Period values are interval energy beginning at the timestamp. Use
+        # the next timestamp as the interval end where available; otherwise
+        # assume a one-hour interval. Only overlapping energy contributes.
+        interval_end = periods[index + 1][0] if index + 1 < len(periods) else start + timedelta(hours=1)
+        interval_end = min(interval_end, start + timedelta(hours=1))
+        overlap_start = max(start, next_hour_start)
+        overlap_end = min(interval_end, next_hour_end)
+        if overlap_end > overlap_start:
+            duration = (interval_end - start).total_seconds()
+            if duration > 0:
+                fraction = (overlap_end - overlap_start).total_seconds() / duration
+                next_hour_energy += energy_wh * min(1.0, max(0.0, fraction))
 
     remaining = 0.0
     for index, (start, energy_wh) in enumerate(periods):
@@ -69,4 +89,7 @@ def parse_forecast(payload, now=None):
         "today": today, "tomorrow": tomorrow,
         "remaining_today_wh": round(remaining),
         "tomorrow_wh": round(daily[tomorrow]) if tomorrow in daily else None,
+        "next_hour_start": next_hour_start,
+        "next_hour_end": next_hour_end,
+        "next_hour_wh": round(next_hour_energy),
     }
