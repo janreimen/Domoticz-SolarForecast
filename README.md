@@ -2,11 +2,11 @@
 
 - **Maintainer / project owner:** Jan Reimen ([`@janreimen`](https://github.com/janreimen))
 - **Canonical repository:** https://github.com/janreimen/Domoticz-SolarForecast
-- **Current version:** `0.0.3`
+- **Current version:** `0.0.4`
 
 A modular [Domoticz](https://www.domoticz.com/) Python plugin that retrieves photovoltaic (PV) production forecasts from [forecast.solar](https://forecast.solar/) and exposes useful energy estimates as Domoticz devices.
 
-> **Release:** `0.0.3` — adds a forecast for the next complete clock hour. This is forecast data, not a meter reading or a guarantee of production.
+> **Release:** `0.0.4` — supports multiple panel groups with different orientations and panel wattages. This is forecast data, not a meter reading or a guarantee of production.
 
 ## Features
 
@@ -18,6 +18,7 @@ A modular [Domoticz](https://www.domoticz.com/) Python plugin that retrieves pho
 - `.env`-based configuration; process environment variables take precedence.
 - Modular implementation and offline unit tests.
 - Optional forecast.solar API key.
+- Multiple PV panel groups with independent tilt, compass orientation, panel count, and panel wattage; forecasts are requested per group and summed.
 
 ## Devices
 
@@ -78,15 +79,17 @@ Copy `.env.example` to `.env` and adjust values for your installation.
 | --- | --- | --- |
 | `LATITUDE` | blank | Decimal latitude; blank uses Domoticz location settings |
 | `LONGITUDE` | blank | Decimal longitude; blank uses Domoticz location settings |
-| `PANEL_DECLINATION` | `45` | Panel tilt in degrees: 0° horizontal, 90° vertical |
-| `PANEL_AZIMUTH` | `0` | forecast.solar convention: 0° south, -90° east, +90° west |
-| `PANEL_PEAK_POWER_KWP` | `4.8` | Installed PV peak power in kWp |
+| `PANEL_DECLINATION` | `45` | Panel tilt; slash-separated per group in multi-array mode |
+| `PANEL_AZIMUTH` | `0` | Legacy mode: forecast.solar convention. Multi-array mode: compass bearings 0=N, 90=E, 180=S, 270=W |
+| `PANEL_AMOUNT` | blank | Number of panels per group, slash-separated; required for multi-array mode |
+| `PANEL_UNIQUE_POWER` | blank | Rated power per panel in watts, slash-separated; required for multi-array mode |
+| `PANEL_PEAK_POWER_KWP` | `4.8` | Legacy single-array peak power. In multi-array mode, calculated from panel counts and wattages |
 | `API_KEY` | blank | Optional forecast.solar API key |
 | `POLL_INTERVAL_MINUTES` | `10` | Poll interval; minimum 5 minutes |
 | `HTTP_TIMEOUT_SECONDS` | `20` | Maximum wait for an API response |
 | `LOG_LEVEL` | `INFO` | `ERROR`, `WARNING`, `INFO`, `DEBUG`, or `TRACE` |
 
-See [Configuration](docs/CONFIGURATION.md) for validation, precedence, and examples. Never commit `.env`, API keys, logs containing private data, or site-specific credentials.
+See [Configuration](docs/CONFIGURATION.md) for validation, precedence, multi-array examples, and azimuth conventions. Never commit `.env`, API keys, logs containing private data, or site-specific credentials.
 
 ## Midnight boundary and time handling
 
@@ -107,4 +110,4 @@ This project builds on the Domoticz SolarForecast plugin by [Jan-Jaap Kostelijk]
 
 ## Release and compatibility notes
 
-This release is `0.0.3`. Treat it as an early release: test it on a non-production Domoticz instance before relying on it for automations. Offline tests do not replace integration testing against your exact Domoticz version and a live API response. See [Release Process](docs/RELEASING.md).
+This release is `0.0.4`. Treat it as an early release: test it on a non-production Domoticz instance before relying on it for automations. Offline tests do not replace integration testing against your exact Domoticz version and a live API response. See [Release Process](docs/RELEASING.md).

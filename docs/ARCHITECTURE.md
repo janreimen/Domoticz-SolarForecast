@@ -1,6 +1,6 @@
 # Architecture
 
-Release `0.0.2` separates Domoticz integration from forecast logic to keep future changes maintainable.
+Release `0.0.4` separates Domoticz integration from forecast logic to keep future changes maintainable.
 
 ## Modules
 
@@ -18,13 +18,14 @@ Release `0.0.2` separates Domoticz integration from forecast logic to keep futur
 1. Domoticz calls the entry point callbacks in `plugin.py`.
 2. `app.py` loads validated settings from `config.py`.
 3. At the configured interval, `api.py` requests a forecast from forecast.solar.
-4. `forecast.py` validates the response and calculates remaining energy today and tomorrow's daily energy.
+4. `forecast.py` validates the response and calculates remaining energy today, the next complete clock-hour energy, and tomorrow's daily energy.
 5. `devices.py` updates the corresponding Domoticz units and the status device.
 
 ## Forecast semantics
 
 - Remaining Today: forecast energy between the current local time and the next local midnight. Periods already in the past are ignored, and the current period is prorated where possible.
 - Tomorrow Forecast: the API's daily forecast for the next local calendar date.
+- Next Hour Forecast: forecast energy during the next full clock-hour block (e.g. 18:00–19:00 when current time is 17:44); it is not a rolling 60-minute window.
 - Status: indicates the most recent successful/failed refresh so automations can distinguish missing data from a valid forecast.
 
 Do not derive solar irradiance from forecast PV power or energy. Add irradiance only if a provider returns an actual irradiance field with a documented unit.

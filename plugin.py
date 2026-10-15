@@ -6,7 +6,7 @@
 <plugin key="SolarForecast"
         name="Solar Forecast"
         author="Jan Reimen"
-        version="0.0.3"
+        version="0.0.4"
         externallink="https://github.com/janreimen/Domoticz-SolarForecast">
     <description>
         <h2>Solar Forecast</h2>
