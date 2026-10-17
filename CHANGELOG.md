@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.4] - 2026-10-15
+
+### Added
+
+- Multi-array PV configuration using slash-separated panel tilt, compass azimuth, panel count, and per-panel wattage.
+- Independent forecast.solar request for each panel group, with period and daily energy summed by timestamp.
+- Automatic total peak-power calculation from panel counts and rated wattage.
+- Backward-compatible support for existing single-array configuration.
+
+### Changed
+
+- Multi-array azimuths use standard compass bearings (0° north, 90° east, 180° south, 270° west) and are converted internally to forecast.solar azimuth convention.
+- Updated package metadata and documentation to version 0.0.4.
+
 All notable user-facing changes for this project are documented here. This project uses a simple Keep a Changelog-inspired structure.
 
 ## [0.0.3] - 2026-10-14
