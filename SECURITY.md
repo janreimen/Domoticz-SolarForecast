@@ -1,22 +1,45 @@
 # Security Policy
 
-## Supported versions
+## Supported Versions
 
-The current release line is `0.0.5`. Security fixes, if any, will be prioritized for the latest maintained version. This early-stage project does not promise a formal long-term support window.
+The current development version is `0.0.5`. Security fixes, where applicable, will be prioritized for the latest maintained version.
 
-## Reporting a vulnerability
+This is an early-stage, community-maintained project. No formal long-term support period or security response-time guarantee is provided.
 
-Please do not publish credentials, API keys, exploitable details, or other sensitive information in a public issue.
+## Reporting a Vulnerability
 
-Project maintainer: Jan Reimen (GitHub: https://github.com/janreimen). Until a private security contact is configured in the repository, use GitHub's **Report a vulnerability** feature (Security tab / private vulnerability reporting) if it is enabled. If that feature is unavailable, contact the repository owner privately through the contact details on their GitHub profile. Include a description, impact, affected version, reproduction steps, and any suggested mitigation. Avoid sending real API keys or personal data.
+**Please do not report security vulnerabilities through public GitHub issues.** Do not publish credentials, API keys, exploitable details, or other sensitive information.
 
-We will acknowledge reports when reasonably possible, investigate, and coordinate a fix or disclosure. No fixed response-time SLA is offered for this community project.
+Project maintainer: Jan Reimen  
+GitHub: https://github.com/janreimen
 
-## Security practices
+Use GitHub's **Report a vulnerability** feature in the repository's Security tab if private vulnerability reporting is enabled.
 
-- Keep `.env` out of version control; it may contain an API key.
-- Do not log credential-bearing URLs or tokens.
-- Restrict `.env` permissions to the Domoticz service account and administrators.
-- Use HTTPS to access forecast.solar.
-- Treat API responses as external input and use finite HTTP timeouts.
-- Redact personal data and tokens before sharing logs.
+If private reporting is unavailable, contact the repository owner privately using the contact details available on their GitHub profile. Do not include real API keys, passwords, precise home coordinates, or unnecessary personal data.
+
+Where possible, include:
+
+- A description of the vulnerability.
+- Its potential impact and affected components.
+- The affected plugin version or commit.
+- Reproduction steps or a proof of concept that does not expose real credentials or data.
+- Any suggested mitigation.
+
+Reports will be acknowledged and investigated as reasonably possible. The maintainer will coordinate remediation and disclosure where practical. No fixed response-time SLA is offered.
+
+Please allow reasonable time for investigation and remediation before publicly disclosing an unpatched vulnerability.
+
+## Security Practices
+
+- **Secrets:** Keep `.env` files containing API keys or other secrets out of version control. Review `.gitignore` and check staged changes before committing.
+- **Credentials in logs:** Do not log API keys, tokens, passwords, or complete credential-bearing URLs.
+- **File permissions:** Restrict access to `.env` and other secret-bearing files to the Domoticz service account and authorized administrators.
+- **Transport security:** Use HTTPS when communicating with `forecast.solar`. Do not disable TLS certificate verification to work around connection errors.
+- **HTTP requests:** Use finite request timeouts and handle network failures and unsuccessful API responses safely.
+- **External data:** Treat API responses and configuration values as external input. Validate data before using it in calculations or device updates.
+- **Dependencies:** Keep dependencies limited to what the plugin needs, and review updates for relevant security fixes.
+- **Diagnostics:** Redact credentials, personal data, public IP addresses, and precise location information before sharing logs or test output.
+
+## Scope
+
+This policy covers security issues in the Domoticz-SolarForecast plugin and its repository-maintained code. Issues in Domoticz, Python, operating systems, or external services should be reported to their respective maintainers when appropriate.
