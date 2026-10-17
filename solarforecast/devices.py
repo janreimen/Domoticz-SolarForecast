@@ -8,14 +8,14 @@ FORECAST_ENERGY_COUNTER_UNIT = 5
 REMAINING_TODAY_DETAIL_UNIT = 6
 
 DEVICE_DEFINITIONS = (
-    (REMAINING_TODAY_UNIT, "Remaining Until Tomorrow 23:59", "Custom", {"Custom": "1;kWh"}),
+    (REMAINING_TODAY_UNIT, "Forecast Remaining (Today + Tomorrow)", "Custom", {"Custom": "1;kWh"}),
     (TOMORROW_UNIT, "Forecast Tomorrow", "Custom", {"Custom": "1;kWh"}),
-    (STATUS_UNIT, "Status", "Text", {}),
-    (NEXT_HOUR_UNIT, "Next Full Hour", "Custom", {"Custom": "1;kWh"}),
+    (STATUS_UNIT, "Forecast Status", "Text", {}),
+    (NEXT_HOUR_UNIT, "Forecast Next Full Hour", "Custom", {"Custom": "1;kWh"}),
     # Native Domoticz electricity-generation meter: sValue is "power_w;total_energy_wh".
-    (FORECAST_ENERGY_COUNTER_UNIT, "Forecast Energy Return Counter", "kWh",
+    (FORECAST_ENERGY_COUNTER_UNIT, "Cumulative Forecast Energy", "kWh",
      {"AddDBLogEntry": "true"}),
-    (REMAINING_TODAY_DETAIL_UNIT, "Remaining Today", "Custom", {"Custom": "1;kWh"}),
+    (REMAINING_TODAY_DETAIL_UNIT, "Forecast Remaining Today", "Custom", {"Custom": "1;kWh"}),
 )
 
 
