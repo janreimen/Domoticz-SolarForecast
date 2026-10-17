@@ -6,7 +6,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from solarforecast.devices import update_unit
+from solarforecast.devices import (
+    DEVICE_DEFINITIONS, FORECAST_ENERGY_COUNTER_UNIT, ensure_devices, update_unit,
+)
 
 
 class ReadOnlyDevice:
@@ -16,12 +18,9 @@ class ReadOnlyDevice:
         self.calls = []
 
     @property
-    def nValue(self):
-        return self._n_value
-
+    def nValue(self): return self._n_value
     @property
-    def sValue(self):
-        return self._s_value
+    def sValue(self): return self._s_value
 
     def Update(self, nValue, sValue):
         self.calls.append((nValue, sValue))
@@ -44,6 +43,30 @@ class DeviceUpdateTests(unittest.TestCase):
         device = ReadOnlyDevice(0, "3.250")
         update_unit(None, {1: device}, 1, "3.250", self.log)
         self.assertEqual(device.calls, [])
+
+    def test_force_update_records_unchanged_value(self):
+        device = ReadOnlyDevice(0, "3.250")
+        update_unit(None, {1: device}, 1, "3.250", self.log, force=True)
+        self.assertEqual(device.calls, [(0, "3.250")])
+
+    def test_counter_is_native_kwh_generation_meter(self):
+        definition = next(row for row in DEVICE_DEFINITIONS if row[0] == FORECAST_ENERGY_COUNTER_UNIT)
+        self.assertEqual(definition[1], "Forecast Energy Return Counter")
+        self.assertEqual(definition[2], "kWh")
+        self.assertEqual(definition[3]["AddDBLogEntry"], "true")
+
+    def test_ensure_devices_creates_counter_as_generation(self):
+        class FakeDevice:
+            def __init__(self, **kwargs): self.kwargs = kwargs
+            def Create(self): created.append(self.kwargs)
+        class FakeDomoticz:
+            def Device(self, **kwargs): return FakeDevice(**kwargs)
+        created = []
+        ensure_devices(FakeDomoticz(), {})
+        counter = next(d for d in created if d["Unit"] == FORECAST_ENERGY_COUNTER_UNIT)
+        self.assertEqual(counter["Name"], "Forecast Energy Return Counter")
+        self.assertEqual(counter["TypeName"], "kWh")
+        self.assertEqual(counter["Switchtype"], 4)
 
     def test_missing_device_is_logged(self):
         update_unit(None, {}, 1, "3.250", self.log)

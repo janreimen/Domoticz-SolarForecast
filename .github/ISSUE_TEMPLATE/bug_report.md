@@ -20,7 +20,7 @@ What happened instead?
 
 ## Environment
 
-- Plugin version (expected: 0.0.4):
+- Plugin version (expected: 0.0.5):
 - Domoticz version:
 - Python version:
 - Operating system:

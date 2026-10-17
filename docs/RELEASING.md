@@ -1,6 +1,6 @@
 # Release process
 
-This document describes how to prepare a repeatable community release. The current packaged version is `0.0.4`.
+This document describes how to prepare a repeatable community release. The current packaged version is `0.0.5`.
 
 ## Pre-release checklist
 
@@ -21,11 +21,13 @@ Use semantic versioning conventions where practical. Because this plugin is earl
 
 ## Build a source archive
 
-From the parent directory:
+Run this from the parent directory of the project folder:
 
 ```sh
-zip -r Domoticz-SolarForecast-0.0.4.zip Domoticz-SolarForecast-0.0.4 \
+zip -r Domoticz-SolarForecast-0.0.5.zip Domoticz-SolarForecast-0.0.5 \
   -x '*/.env' '*/__pycache__/*' '*.pyc' '*/.git/*' '*/.venv/*'
+unzip -t Domoticz-SolarForecast-0.0.5.zip
+unzip -l Domoticz-SolarForecast-0.0.5.zip
 ```
 
-Run tests before packaging and verify the resulting archive with `unzip -l`.
+Run tests before packaging and verify that the archive's top-level folder and version match the release.

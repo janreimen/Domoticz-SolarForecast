@@ -6,12 +6,12 @@
 <plugin key="SolarForecast"
         name="Solar Forecast"
         author="Jan Reimen"
-        version="0.0.4"
+        version="0.0.5"
         externallink="https://github.com/janreimen/Domoticz-SolarForecast">
     <description>
         <h2>Solar Forecast</h2>
-        Forecasts photovoltaic energy remaining before midnight and the full-day
-        forecast for tomorrow using forecast.solar. Configure via the .env file.
+        Forecasts photovoltaic energy for the next full hour, through tomorrow 23:59,
+        tomorrow, and today remaining. Configure via the .env file.
     </description>
 </plugin>
 """

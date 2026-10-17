@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.5] - 2026-10-17
+
+### Added
+
+- Added Unit 6, `Remaining Today`, derived from the forecast through tomorrow 23:59 minus tomorrow's daily forecast.
+- Persist the cumulative Wh total and pending forecast hour so a restart does not add the same hour twice.
+
+### Changed
+
+- Unit 1 now reports `Remaining Until Tomorrow 23:59`; Unit 2 is `Forecast Tomorrow`; Unit 4 is `Next Full Hour`. Existing unit numbers remain unchanged.
+- Configured Unit 5 as a native Domoticz generated/returned-energy counter (`Switchtype=4`), not an electricity-usage counter.
+- Updated the status/log wording to report all four forecast values.
+- Updated plugin version metadata, API User-Agent, and release documentation to `0.0.5`.
+
 ## [0.0.4] - 2026-10-15
 
 ### Added

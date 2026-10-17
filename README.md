@@ -2,11 +2,11 @@
 
 - **Maintainer / project owner:** Jan Reimen ([`@janreimen`](https://github.com/janreimen))
 - **Canonical repository:** https://github.com/janreimen/Domoticz-SolarForecast
-- **Current version:** `0.0.4`
+- **Current version:** `0.0.5`
 
 A modular [Domoticz](https://www.domoticz.com/) Python plugin that retrieves photovoltaic (PV) production forecasts from [forecast.solar](https://forecast.solar/) and exposes useful energy estimates as Domoticz devices.
 
-> **Release:** `0.0.4` — supports multiple panel groups with different orientations and panel wattages. This is forecast data, not a meter reading or a guarantee of production.
+> **Release:** `0.0.5` — supports multiple panel groups and accumulates hourly next-hour forecast energy in a native Domoticz electricity counter. This is forecast data, not a meter reading or a guarantee of production.
 
 ## Features
 
@@ -15,6 +15,7 @@ A modular [Domoticz](https://www.domoticz.com/) Python plugin that retrieves pho
 - Forecast energy for the next complete clock-hour block (e.g. at 17:44, the 18:00–19:00 hour).
 - Current forecast interval is prorated when the current time falls within it.
 - Independent status device to help identify unavailable/stale forecast data.
+- A cumulative forecast-energy counter adds the next-hour forecast once when that forecast hour begins; counter state and the pending hour are saved across plugin restarts.
 - `.env`-based configuration; process environment variables take precedence.
 - Modular implementation and offline unit tests.
 - Optional forecast.solar API key.
@@ -24,12 +25,14 @@ A modular [Domoticz](https://www.domoticz.com/) Python plugin that retrieves pho
 
 | Unit | Device name | Meaning | Data meaning |
 | --- | --- | --- | --- |
-| 1 | Remaining Today | Estimated PV energy from now until midnight | Forecast energy, kWh |
-| 2 | Tomorrow Forecast | Estimated PV energy for tomorrow's calendar day | Forecast energy, kWh |
+| 1 | Remaining Until Tomorrow 23:59 | Forecast energy from now through the end of tomorrow | Forecast energy, kWh |
+| 2 | Forecast Tomorrow | Forecast energy for tomorrow's calendar day | Forecast energy, kWh |
 | 3 | Status | Most recent update/result status | Text |
-| 4 | Next Hour Forecast | Estimated PV energy for the next full clock hour | Forecast energy, kWh |
+| 4 | Next Full Hour | Forecast energy for the next complete clock-hour block | Forecast energy, kWh |
+| 5 | Forecast Energy Return Counter | Cumulative forecast energy, recorded once when each forecast hour begins | Generated-power field (W) and cumulative energy (Wh) |
+| 6 | Remaining Today | Derived as Unit 1 minus Unit 2 | Forecast energy, kWh |
 
-The numeric devices represent forecast energy, not actual generated energy, instantaneous power, irradiance, or money. Do not connect them to a cumulative energy counter as if they were meter readings. Check the Status device before using forecast values in automations. If a forecast is unavailable, do not assume a numeric zero means a genuine zero-production forecast.
+Units 1, 2, 4, and 6 are forecast energy, not measured generation. Unit 5 is a native Domoticz electricity-generation/return counter (`Switchtype=4`), not an electricity-usage counter. It adds the next-hour estimate once when that forecast hour begins. Its lifetime total is stored in `.solarforecast_counter.json` in the plugin directory. Check the Status device before using forecast values in automations. If a forecast is unavailable, do not assume a numeric zero means a genuine zero-production forecast.
 
 ## Requirements
 
@@ -93,7 +96,7 @@ See [Configuration](docs/CONFIGURATION.md) for validation, precedence, multi-arr
 
 ## Midnight boundary and time handling
 
-The remaining-today calculation uses the host's local time and never includes forecast intervals belonging to tomorrow. The current interval is prorated where possible. The Next Hour Forecast is the next complete clock-hour block, not a rolling 60-minute window: at 17:44 it covers 18:00–19:00. Tomorrow's estimate is taken from the API's daily forecast for tomorrow, not by adding today's remaining energy. Forecast availability and granularity depend on the upstream service and account plan.
+Unit 1 covers forecast energy from now through tomorrow at 23:59 (implemented as the forecast remainder today plus tomorrow's daily estimate). Unit 2 is tomorrow's daily estimate. Unit 6 (Remaining Today) is calculated as Unit 1 minus Unit 2. The current forecast interval is prorated where possible. Next Full Hour is the next complete clock-hour block, not a rolling 60-minute window: at 17:44 it covers 18:00–19:00. Forecast availability and granularity depend on the upstream service and account plan.
 
 ## Community and support
 
@@ -110,4 +113,4 @@ This project builds on the Domoticz SolarForecast plugin by [Jan-Jaap Kostelijk]
 
 ## Release and compatibility notes
 
-This release is `0.0.4`. Treat it as an early release: test it on a non-production Domoticz instance before relying on it for automations. Offline tests do not replace integration testing against your exact Domoticz version and a live API response. See [Release Process](docs/RELEASING.md).
+This release is `0.0.5`. Unit numbers 1–5 are preserved; Unit 6 is new. Existing unit names are aligned on plugin startup. Unit 5 is configured as generated/returned electricity rather than usage so the forecast is not represented as household consumption. Back up the plugin directory first. Offline tests do not replace integration testing against your exact Domoticz version and a live API response. See [Release Process](docs/RELEASING.md).

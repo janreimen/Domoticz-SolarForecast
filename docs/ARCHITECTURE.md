@@ -1,6 +1,6 @@
 # Architecture
 
-Release `0.0.4` separates Domoticz integration from forecast logic to keep future changes maintainable.
+Release `0.0.5` separates Domoticz integration from forecast logic to keep future changes maintainable.
 
 ## Modules
 
@@ -19,14 +19,17 @@ Release `0.0.4` separates Domoticz integration from forecast logic to keep futur
 2. `app.py` loads validated settings from `config.py`.
 3. At the configured interval, `api.py` requests a forecast from forecast.solar.
 4. `forecast.py` validates the response and calculates remaining energy today, the next complete clock-hour energy, and tomorrow's daily energy.
-5. `devices.py` updates the corresponding Domoticz units and the status device.
+5. `app.py` saves the next-hour forecast as a pending sample; when that forecast hour begins, it adds the sample once to a persistent cumulative Wh total.
+6. `devices.py` updates the forecast units, native electricity counter, and status device.
 
 ## Forecast semantics
 
-- Remaining Today: forecast energy between the current local time and the next local midnight. Periods already in the past are ignored, and the current period is prorated where possible.
-- Tomorrow Forecast: the API's daily forecast for the next local calendar date.
-- Next Hour Forecast: forecast energy during the next full clock-hour block (e.g. 18:00–19:00 when current time is 17:44); it is not a rolling 60-minute window.
-- Status: indicates the most recent successful/failed refresh so automations can distinguish missing data from a valid forecast.
+- Remaining Until Tomorrow 23:59 (unit 1): forecast energy from now through the end of tomorrow, computed as remaining energy today plus tomorrow's daily forecast when available.
+- Forecast Tomorrow (unit 2): the API's daily forecast for the next local calendar date.
+- Next Full Hour (unit 4): forecast energy during the next full clock-hour block (e.g. 18:00–19:00 when current time is 17:44); it is not a rolling 60-minute window.
+- Forecast Energy Return Counter (unit 5): native Domoticz generated/returned-energy counter (`Switchtype=4`), not usage. Its power field is the next-hour forecast expressed as average W, and its cumulative energy field is the sum of one forecast sample per hour in Wh. This is an accumulated forecast, not measured household production. The pending forecast and total are saved in `.solarforecast_counter.json`.
+- Remaining Today (unit 6): unit 1 minus unit 2, keeping the today-only forecast separately available.
+- Status (unit 3): indicates the most recent successful/failed refresh so automations can distinguish missing data from a valid forecast.
 
 Do not derive solar irradiance from forecast PV power or energy. Add irradiance only if a provider returns an actual irradiance field with a documented unit.
 

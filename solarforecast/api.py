@@ -4,7 +4,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
-USER_AGENT = "Domoticz-SolarForecast/0.0.4"
+USER_AGENT = "Domoticz-SolarForecast/0.0.5"
 
 
 def build_forecast_url(config, array=None):

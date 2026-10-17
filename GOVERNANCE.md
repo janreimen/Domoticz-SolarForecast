@@ -2,7 +2,7 @@
 
 ## Current status
 
-This is an early-stage community project. Release `0.0.4` is the current documented version. Maintainer availability is best-effort and no response-time guarantee is implied.
+This is an early-stage community project. Release `0.0.5` is the current documented version. Maintainer availability is best-effort and no response-time guarantee is implied.
 
 ## Decisions
 
