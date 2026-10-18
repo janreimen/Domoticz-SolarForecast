@@ -2,13 +2,13 @@
 
 ## Is Remaining Today actual production?
 
-No. Unit 6 is the forecast remainder for today, derived as Remaining Until Tomorrow 23:59 (unit 1) minus Forecast Tomorrow (unit 2). It is not measured production. Unit 1 covers the current remainder plus tomorrow's forecast.
+No. Unit 6 is the forecast remainder for today, derived as Forecast Remaining (Today + Tomorrow) (unit 1) minus Forecast Tomorrow (unit 2). It is not measured production. Unit 1 covers the current remainder plus tomorrow's forecast.
 
 ## Is Forecast Tomorrow a cumulative energy counter?
 
 No. It is a daily forecast value for tomorrow. Do not add it to actual meter readings or treat it as a monotonically increasing counter.
 
-## What time period does Next Full Hour cover?
+## What time period does Forecast Next Full Hour cover?
 
 It covers the next complete clock-hour block, not the next 60 minutes from the current instant. For example, at 17:44 it covers 18:00–19:00. The value is forecast energy in kWh, not instantaneous power.
 

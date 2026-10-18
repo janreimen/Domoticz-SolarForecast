@@ -1,58 +1,45 @@
 # Roadmap
 
-This document outlines the planned development of **Domoticz-SolarForecast**, a Domoticz plugin that retrieves solar production forecasts and exposes them as Domoticz devices.
+This roadmap outlines possible future work for **Domoticz-SolarForecast**. Priorities may change based on testing, bug reports, upstream API changes, and user feedback. It is indicative, not a delivery-date commitment.
 
-The roadmap is indicative. Priorities may change based on bug reports, testing results, user feedback, and changes to the upstream forecast service.
+## Current development — v0.0.5
 
-## Current Development
-
-### v0.0.5 — Forecast History and Reliability
-
-**Goal:** Improve forecast tracking, persistence, and test coverage.
+**Goal:** Improve forecast tracking, persistence, device clarity, and test coverage.
 
 - [x] Support multiple PV arrays with individual orientation, tilt, panel count, and panel power.
-- [ ] Track forecast-derived energy over time.
-- [ ] Persist forecast-counter state across plugin restarts.
-- [ ] Avoid counting the same forecast hour more than once.
+- [ ] Verify cumulative forecast-energy tracking over time.
+- [ ] Verify that counter state and the pending hour survive plugin restarts.
+- [ ] Verify duplicate-hour protection at hour boundaries.
 - [ ] Handle polling failures and missing forecast periods reliably.
 - [ ] Validate device names, units, and Domoticz meter semantics.
 - [ ] Expand automated tests for forecast calculations and history tracking.
-- [ ] Update documentation, installation instructions, and support information.
-- [ ] Verify the complete test suite on the supported Domoticz environment.
+- [ ] Verify the complete test suite and test on a real Domoticz installation.
 
-**Release status:** In development. Mark this release complete only after implementation and tests have been verified.
+Release status: in development until the implementation and tests have been verified.
 
-## Planned Releases
+## v0.0.6 — Forecast history improvements
 
-### v0.0.6 — Forecast History Improvements
-
-**Goal:** Make historical forecast information more useful for troubleshooting and analysis.
-
-Potential improvements:
+Potential goals:
 
 - [ ] Improve the structure and readability of stored forecast history.
-- [ ] Define how long historical data should be retained.
+- [ ] Define a retention policy for historical data.
 - [ ] Handle missing, stale, or revised forecast data.
-- [ ] Improve diagnostics for forecast changes between polling cycles.
-- [ ] Document the difference between predicted energy and measured PV production.
+- [ ] Improve diagnostics for changes between forecast polling cycles.
+- [ ] Document forecast estimates versus measured PV production.
 
-### v0.0.7 — Configuration and Diagnostics
+## v0.0.7 — Configuration and diagnostics
 
-**Goal:** Make configuration easier to understand and diagnose.
+Potential goals:
 
-Potential improvements:
-
-- [ ] Improve validation of single-array and multi-array configuration.
-- [ ] Provide clear errors for invalid array counts, orientations, tilts, and panel power.
+- [ ] Improve validation for single-array and multi-array configurations.
+- [ ] Provide actionable errors for invalid panel counts, orientations, tilts, and power values.
 - [ ] Improve logging for API errors, timeouts, and malformed responses.
-- [ ] Document configuration examples for common PV installations.
+- [ ] Add configuration examples for common PV installations.
 - [ ] Review compatibility with supported Domoticz and Python versions.
 
-### v0.1.0 — Stable Feature Set
+## v0.1.0 — Stable feature set
 
-**Goal:** Establish a well-tested baseline for regular use.
-
-Planned release criteria:
+Potential release criteria:
 
 - [ ] Automated tests cover the main forecast and device-update paths.
 - [ ] Restart and state-restoration behaviour is tested.
@@ -60,43 +47,23 @@ Planned release criteria:
 - [ ] Configuration errors produce actionable messages.
 - [ ] Device names, units, and counter semantics are documented.
 - [ ] Installation and upgrade procedures are documented.
-- [ ] A release has been tested in a real Domoticz installation.
+- [ ] The release has been tested in a real Domoticz installation.
 
-The exact scope of v0.1.0 will depend on feedback and testing results.
-
-## Longer-Term Ideas
-
-The following ideas have no committed release date:
+## Longer-term ideas
 
 - [ ] Compare historical forecasts with measured PV production from another system.
-- [ ] Provide better insight into forecast accuracy over time.
+- [ ] Provide insight into forecast accuracy over time.
 - [ ] Improve diagnostics for individual PV arrays.
-- [ ] Add optional export or integration mechanisms if there is a clear use case.
-- [ ] Review opportunities to reduce unnecessary API requests.
+- [ ] Consider optional export/integration mechanisms where there is a clear use case.
+- [ ] Reduce unnecessary API requests where possible.
 
-These ideas will be considered only where they add practical value without making the plugin unnecessarily complex.
+## Project principles
 
-## Out of Scope
-
-Unless a specific use case justifies a change, the project will not:
-
-- Treat forecast estimates as measured production.
-- Require a paid API key where the upstream service supports access without one.
-- Enable unrelated remote-control functionality.
-- Introduce unnecessary external dependencies.
-- Promise compatibility with untested Domoticz versions.
+- Forecast estimates must not be presented as measured production.
+- Do not introduce unnecessary external dependencies.
+- Do not promise compatibility with untested Domoticz versions.
+- Keep configuration and logs safe for users to share after redaction.
 
 ## Contributing
 
-Bug reports, feature requests, and tested improvements are welcome.
-
-Before proposing a feature, please check the existing issues and explain the problem it solves. Bug reports should include the plugin version, relevant redacted logs, configuration details that are safe to share, and steps to reproduce the issue.
-
-See [SUPPORT.md](SUPPORT.md) for support guidance and [SECURITY.md](SECURITY.md) for vulnerability reporting.
-
-## Versioning
-
-The project uses versioned releases to communicate changes. The roadmap is not a guarantee of delivery dates or feature availability.
-
-See [CHANGELOG.md](CHANGELOG.md) for implemented changes and release notes.
-
+Bug reports, feature requests, and tested improvements are welcome. See [SUPPORT.md](SUPPORT.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRIBUTING.md). Implemented changes belong in [CHANGELOG.md](CHANGELOG.md).

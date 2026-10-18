@@ -188,51 +188,18 @@ class SolarForecastApp:
             update_unit(self.domoticz, devices, FORECAST_ENERGY_COUNTER_UNIT,
                         "{};{}".format(next_hour_wh, total_wh), self.log, force=changed)
 
-            #update_time = self.clock().strftime("%H:%M")
-            update_time = datetime.fromtimestamp(self.clock()).strftime("%H:%M")
             if tomorrow_wh is None:
-                status = (
-                    "PARTIAL\n"
-                    "Last update: {}\n"
-                    "Tomorrow's forecast unavailable"
-                ).format(update_time)
-
-                self.log(
-                    "WARNING",
-                    "No daily forecast returned for tomorrow ({})".format(
-                        forecast["tomorrow"]
-                    ),
-                )
+                status = "PARTIAL - until tomorrow 23:59 {:.3f}; next full hour {:.3f} kWh; tomorrow unavailable".format(
+                    remaining_until_tomorrow_kwh, next_hour_kwh)
+                self.log("WARNING", "No daily forecast returned for tomorrow ({})".format(forecast["tomorrow"]))
             else:
-                status = "OK\nLast update: {}".format(update_time)
-
-                self.log(
-                    "INFO",
-                    "Updated forecast: next full hour {:.3f} kWh; "
-                    "remaining until tomorrow 23:59 {:.3f} kWh; "
-                    "forecast tomorrow {:.3f} kWh; "
-                    "remaining today {:.3f} kWh".format(
-                        next_hour_kwh,
-                        remaining_until_tomorrow_kwh,
-                        tomorrow_kwh,
-                        today_kwh,
-                    ),
-                )
-
-            update_unit(
-                self.domoticz,
-                devices,
-                STATUS_UNIT,
-                status,
-                self.log,
-            )
+                status = "OK - next full hour {:.3f}; until tomorrow 23:59 {:.3f}; forecast tomorrow {:.3f}; remaining today {:.3f} kWh".format(
+                    next_hour_kwh, remaining_until_tomorrow_kwh, tomorrow_kwh, today_kwh)
+                self.log("INFO", "Updated forecast: next full hour {:.3f} kWh; remaining until tomorrow 23:59 {:.3f} kWh; forecast tomorrow {:.3f} kWh; remaining today {:.3f} kWh".format(
+                    next_hour_kwh, remaining_until_tomorrow_kwh, tomorrow_kwh, today_kwh))
+            update_unit(self.domoticz, devices, STATUS_UNIT, status, self.log)
             self.last_success = self.clock()
         except Exception as exc:
             self.log("ERROR", "Forecast poll failed: {}".format(exc))
-            update_unit(
-                self.domoticz,
-                self.devices_provider(),
-                STATUS_UNIT,
-                "ERROR\n{}".format(str(exc)[:180]),
-                self.log,
-            )
+            update_unit(self.domoticz, self.devices_provider(), STATUS_UNIT,
+                        "ERROR - {}".format(str(exc)[:180]), self.log)

@@ -1,33 +1,18 @@
 # Changelog
 
-All notable user-facing changes to Domoticz-SolarForecast are documented in this file.
-
-This project follows a simple, Keep a Changelog-inspired structure. Versions are listed in reverse chronological order.
-
 ## [0.0.5] - 2026-10-17
 
 ### Added
 
-- Added forecast-history tracking through the cumulative forecast energy counter.
-- Added persistent counter state to retain accumulated forecast energy and hourly accounting information across plugin restarts.
-- Added pending-hour tracking so an hourly forecast can be saved and accounted for when the corresponding hour begins.
-- Added protection against counting the same forecast hour more than once.
-- Added automated tests for forecast-counter accumulation, exact-hour accounting, and restoration of counter state after restart.
-- Expanded device tests for Domoticz device updates, counter configuration, and device unit ID uniqueness.
-- Expanded plugin tests for multi-array configuration, forecast aggregation, and time-boundary behaviour.
+- Added Unit 6, `Forecast Remaining Today`, derived as Unit 1 minus tomorrow's daily forecast.
+- Persist the cumulative Wh total and pending forecast hour so a restart does not add the same hour twice.
 
 ### Changed
 
-- Refined the test suite for device handling, forecast calculations, API responses, and multi-array PV configurations.
-- Updated support and security documentation for development-version troubleshooting, diagnostic information, responsible vulnerability reporting, and handling of sensitive configuration data.
-- Clarified that forecast estimates and cumulative forecast values are not actual PV meter readings or verified financial earnings.
-
-### Notes
-
-- The cumulative forecast energy counter represents forecast-derived energy, not measured PV production.
-- Hourly accounting depends on the forecast data available when the relevant hour is processed.
-- Forecast history and accumulated values should be checked against the implementation and live Domoticz behaviour before being used for reporting.
-- Run the complete offline test suite before installing this version on a production Domoticz instance.
+- Unit 1 is `Forecast Remaining (Today + Tomorrow)`; Unit 2 is `Forecast Tomorrow`; Unit 3 is `Forecast Status`; Unit 4 is `Forecast Next Full Hour`; Unit 5 is `Cumulative Forecast Energy`; Unit 6 is `Forecast Remaining Today`. Existing unit numbers remain unchanged.
+- Configured Unit 5 as a native Domoticz generated/returned-energy counter (`Switchtype=4`), not an electricity-usage counter.
+- Updated the status/log wording to report all four forecast values.
+- Updated plugin version metadata, API User-Agent, and release documentation to `0.0.5`.
 
 ## [0.0.4] - 2026-10-15
 
@@ -40,8 +25,10 @@ This project follows a simple, Keep a Changelog-inspired structure. Versions are
 
 ### Changed
 
-- Multi-array azimuths use standard compass bearings (0° north, 90° east, 180° south, 270° west) and are converted internally to the forecast.solar azimuth convention.
+- Multi-array azimuths use standard compass bearings (0° north, 90° east, 180° south, 270° west) and are converted internally to forecast.solar azimuth convention.
 - Updated package metadata and documentation to version 0.0.4.
+
+All notable user-facing changes for this project are documented here. This project uses a simple Keep a Changelog-inspired structure.
 
 ## [0.0.3] - 2026-10-14
 
@@ -49,7 +36,7 @@ This project follows a simple, Keep a Changelog-inspired structure. Versions are
 
 - Added the `Next Hour Forecast` kWh sensor (Domoticz unit 4).
 - The sensor estimates energy for the next complete clock-hour block, not a rolling 60-minute window. For example, at 17:44 it forecasts 18:00–19:00.
-- Added fixed-time unit tests for next-hour boundary behaviour.
+- Added fixed-time unit tests for next-hour boundary behavior.
 
 ### Changed
 
@@ -77,7 +64,7 @@ This project follows a simple, Keep a Changelog-inspired structure. Versions are
 - Remaining Today energy forecast with local-midnight cutoff and current-interval prorating.
 - Separate Tomorrow Forecast daily energy sensor.
 - Status device for the most recent refresh result.
-- HTTP timeout and error handling, plus offline unit tests.
+- HTTP timeout/error handling and offline unit tests.
 - Community documentation, contribution guidance, security policy, support guide, issue templates, and automated test workflow.
 
 ### Notes
